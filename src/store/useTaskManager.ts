@@ -9,18 +9,23 @@ interface Task {
 //Type of StateManager Task
 interface TaskManagerState {
   tasks: Task[];
-  searchTask: (searchQuery: string) => void;
+  searchTask: string;
+  setSearchTask: (searchQuery: string) => void;
   addTask: (newTask: Task) => void;
   updateTask: (taskId: number, updatedTask: Partial<Task>) => void;
   deleteTask: (taskId: number) => void;
 }
 
 //State Manager Tasks
-const useTaskManager = create((set) => ({
+const useTaskManager = create<TaskManagerState>((set) => ({
   tasks: [],
-
+  searchTask: '',
+  setSearchTask: (searchQuery: string) => {
+    set((state: TaskManagerState) => ({ ...state, searchQuery }));
+  },
+  
   //For searching task title
-  searchTask: (searchQuery: string) => {
+  searchQueryTask: (searchQuery: string) => {
     set((state : TaskManagerState) => ({
       tasks: state.tasks.filter((task) =>
         task.title.toLowerCase().includes(searchQuery.toLowerCase())
